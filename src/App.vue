@@ -11,5 +11,6 @@ import { Button } from "vant";
 
 <style module>
 .box {
+  width: 375px;
 }
 </style>
