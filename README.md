@@ -1,5 +1,13 @@
 # Vue 3 + TypeScript + Vite
 
+## Github Page
+
+```
+git add dist -f
+git commit -m "dist"
+git subtree push --prefix dist origin gh-pages
+```
+
 ```javascript
 const APIS = {
   lotteryList:
