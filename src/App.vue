@@ -70,7 +70,9 @@ const current = (drawNum: string) => {
   height: 8px;
 }
 .box {
-  width: 375px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
 }
 .list {
   display: flex;
