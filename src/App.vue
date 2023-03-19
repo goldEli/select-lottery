@@ -44,6 +44,7 @@ const current = (drawNum: string) => {
 <template>
   <div :class="$style.box">
     <Button :type="'primary'" @click="onAdd">Add</Button>
+    <div :class="$style.gap"></div>
     <ul :class="$style.list">
       <li
         @click="onRemove(current(item)?.lotteryDrawNum ?? '')"
@@ -65,6 +66,9 @@ const current = (drawNum: string) => {
 </template>
 
 <style module>
+.gap {
+  height: 8px;
+}
 .box {
   width: 375px;
 }
