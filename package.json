@@ -11,7 +11,8 @@
   "dependencies": {
     "postcss-px-to-viewport": "^1.1.1",
     "vant": "^4.1.0",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-query": "^1.26.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
