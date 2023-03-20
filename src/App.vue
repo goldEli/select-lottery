@@ -1,26 +1,35 @@
 <script setup lang="ts">
 import "vant/lib/index.css";
-import { Button, showConfirmDialog } from "vant";
+import { Button, showConfirmDialog, ActionSheet, Field } from "vant";
 import { useLotteryList } from "./api/lottery";
-import { computed, watch, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import LotteryBox from "./components/LotteryBox.vue";
 const res = useLotteryList();
+const show = ref(false);
 
 const list = computed(() => {
   return res.data.value?.value.list;
 });
-const lastedNum = computed(() => {
-  return parseInt(list.value?.[0].lotteryDrawNum ?? "") + 1;
+const latestNum = computed(() => {
+  return parseInt(list.value?.[0].lotteryDrawNum ?? "") + 1 + "";
 });
+const inputVal = ref("");
 const store = useLocalStorage<string[]>("lottery-data", []);
 
 watchEffect(() => {
-  console.log(store.value);
+  inputVal.value = latestNum.value;
 });
 
+const onOpen = () => {
+  show.value = true;
+};
 const onAdd = () => {
-  store.value.push(lastedNum.value + "");
+  if (!inputVal.value) {
+    return;
+  }
+  store.value.push(inputVal.value);
+  show.value = false;
 };
 const onRemove = (drawNum: string) => {
   showConfirmDialog({
@@ -43,7 +52,7 @@ const current = (drawNum: string) => {
 
 <template>
   <div :class="$style.box">
-    <Button :type="'primary'" @click="onAdd">Add</Button>
+    <Button :type="'primary'" @click="onOpen">Add</Button>
     <div :class="$style.gap"></div>
     <ul :class="$style.list">
       <li
@@ -62,10 +71,27 @@ const current = (drawNum: string) => {
         />
       </li>
     </ul>
+    <ActionSheet v-model:show="show" title="Add">
+      <div :class="$style.actionArea">
+        <Field
+          label="期号"
+          placeholder="请输入期号"
+          v-model:model-value="inputVal"
+        />
+        <Button :type="'primary'" @click="onAdd">Confirm</Button>
+      </div>
+    </ActionSheet>
   </div>
 </template>
 
 <style module>
+.actionArea {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 48px 16px;
+  gap: 16px;
+  align-items: center;
+}
 .gap {
   height: 8px;
 }
