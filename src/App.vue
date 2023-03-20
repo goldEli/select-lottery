@@ -4,7 +4,7 @@ import { Button, showConfirmDialog, ActionSheet, Field } from "vant";
 import { useLotteryList } from "./api/lottery";
 import { computed, ref, watchEffect } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import LotteryBox from "./components/LotteryBox.vue";
+import LotteryListItem from "./components/LotteryListItem.vue";
 const res = useLotteryList();
 const show = ref(false);
 
@@ -31,23 +31,6 @@ const onAdd = () => {
   store.value.push(inputVal.value);
   show.value = false;
 };
-const onRemove = (drawNum: string) => {
-  showConfirmDialog({
-    title: "Title",
-    message: "Delete it?",
-  })
-    .then(() => {
-      // on confirm
-      const idx = store.value.findIndex((item) => item === drawNum);
-      store.value.splice(idx, 1);
-    })
-    .catch(() => {
-      // on cancel
-    });
-};
-const current = (drawNum: string) => {
-  return list.value?.find((item) => item.lotteryDrawNum == drawNum);
-};
 </script>
 
 <template>
@@ -55,21 +38,7 @@ const current = (drawNum: string) => {
     <Button :type="'primary'" @click="onOpen">Add</Button>
     <div :class="$style.gap"></div>
     <ul :class="$style.list">
-      <li
-        @click="onRemove(current(item)?.lotteryDrawNum ?? '')"
-        :class="$style.listItem"
-        v-for="item in store"
-        :key="item"
-      >
-        <div :class="$style.titleBox">
-          <span>{{ item ?? current(item)?.lotteryDrawNum }}</span>
-          <span>{{ current(item)?.lotteryDrawTime }}</span>
-          <span>{{ current(item)?.lotteryDrawResult }}</span>
-        </div>
-        <lottery-box
-          :nums="current(item)?.lotteryDrawResult.split(' ') ?? []"
-        />
-      </li>
+      <LotteryListItem v-for="item in store" :key="item" :draw-num="item" />
     </ul>
     <ActionSheet v-model:show="show" title="Add">
       <div :class="$style.actionArea">
